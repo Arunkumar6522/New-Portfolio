@@ -12,7 +12,11 @@
 
 function doPost(e) {
     try {
-        var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+        var sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet1");
+        if (!sheet) {
+            // Fallback if Sheet1 is not found, though user requested Sheet1.
+            sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+        }
         var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
         var nextRow = sheet.getLastRow() + 1;
 
