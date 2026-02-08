@@ -1308,7 +1308,7 @@
             border-style: var(--border-style, none);
             box-sizing: border-box;
             border-radius: inherit;
-            
+
             pointer-events: none;
             width: 100%;
             height: 100%;
@@ -1756,7 +1756,7 @@
         ul.framer-text {
             background-color: var(--framer-blockquote-text-background-color, var(--framer-text-background-color, initial));
             border-radius: var(--framer-blockquote-text-background-radius, var(--framer-text-background-radius, initial));
-            
+
             padding: var(--framer-blockquote-text-background-padding, var(--framer-text-background-padding, initial))
         }
 
@@ -1880,7 +1880,7 @@
             cursor: var(--framer-custom-cursors, pointer);
             background-color: initial;
             border-radius: var(--framer-link-text-background-radius, initial);
-            
+
             padding: var(--framer-link-text-background-padding, initial)
         }
 
@@ -1946,7 +1946,7 @@
             font-size: calc(var(--framer-link-hover-font-size, var(--framer-blockquote-font-size, var(--framer-font-size, 16px)))*var(--framer-font-size-scale, 1));
             text-transform: var(--framer-link-hover-text-transform, var(--framer-blockquote-text-transform, var(--framer-link-text-transform, var(--framer-text-transform, none))));
             border-radius: var(--framer-link-hover-text-background-radius, var(--framer-link-text-background-radius, var(--framer-text-background-radius, initial)));
-            
+
             padding: var(--framer-link-hover-text-background-padding, var(--framer-link-text-background-padding, var(--framer-text-background-padding, initial)))
         }
 
@@ -1999,7 +1999,7 @@
             font-size: calc(var(--framer-link-current-font-size, var(--framer-link-font-size, var(--framer-font-size, 16px)))*var(--framer-font-size-scale, 1));
             text-transform: var(--framer-link-current-text-transform, var(--framer-link-text-transform, var(--framer-text-transform, none)));
             border-radius: var(--framer-link-current-text-background-radius, var(--framer-link-text-background-radius, initial));
-            
+
             padding: var(--framer-link-current-text-background-padding, var(--framer-link-text-background-padding, initial))
         }
 
@@ -2067,7 +2067,7 @@
             font-size: calc(var(--framer-link-hover-font-size, var(--framer-link-current-font-size, var(--framer-link-font-size, var(--framer-font-size, 16px))))*var(--framer-font-size-scale, 1));
             text-transform: var(--framer-link-hover-text-transform, var(--framer-link-current-text-transform, var(--framer-link-text-transform, var(--framer-text-transform, none))));
             border-radius: var(--framer-link-hover-text-background-radius, var(--framer-link-current-text-background-radius, var(--framer-link-text-background-radius, initial)));
-            
+
             padding: var(--framer-link-hover-text-background-padding, var(--framer-link-current-text-background-padding, var(--framer-link-text-background-padding, initial)))
         }
 
@@ -2138,8 +2138,7 @@
             --framer-font-open-type-features: normal;
             --framer-text-background-color: initial;
             --framer-text-background-radius: initial;
-            --framer-text-background-
-            --framer-text-background-padding: initial
+            --framer-text-background- --framer-text-background-padding: initial
         }
 
         ol.framer-text {
@@ -4978,7 +4977,7 @@
             border-style: var(--border-style, none);
             box-sizing: border-box;
             border-radius: inherit;
-            
+
             pointer-events: none;
             width: 100%;
             height: 100%;
@@ -6221,7 +6220,7 @@
             border-top-right-radius: var(--framer-input-border-radius-top-right);
             border-bottom-right-radius: var(--framer-input-border-radius-bottom-right);
             border-bottom-left-radius: var(--framer-input-border-radius-bottom-left);
-            
+
             background: var(--framer-input-background);
             transition: var(--framer-input-focused-transition);
             transition-property: background, box-shadow;
@@ -6404,7 +6403,7 @@
             border-top-right-radius: var(--framer-input-border-radius-top-right);
             border-bottom-right-radius: var(--framer-input-border-radius-bottom-right);
             border-bottom-left-radius: var(--framer-input-border-radius-bottom-left);
-            
+
             border-color: var(--framer-input-border-color);
             border-top-width: var(--framer-input-border-top-width);
             border-right-width: var(--framer-input-border-right-width);
@@ -6431,7 +6430,7 @@
             border-top-right-radius: var(--framer-input-border-radius-top-right);
             border-bottom-right-radius: var(--framer-input-border-radius-bottom-right);
             border-bottom-left-radius: var(--framer-input-border-radius-bottom-left);
-            
+
             box-shadow: var(--framer-input-box-shadow);
             transition: var(--framer-input-focused-transition);
             padding-top: 0;
@@ -23967,56 +23966,59 @@
     <!-- Start of bodyEnd -->
     <!-- End of bodyEnd -->
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const forms = document.querySelectorAll('form');
+        // Use a capturing listener to intercept the submit event BEFORE Framer's scripts see it.
+        document.addEventListener('submit', function (e) {
+            // Check if the submitted element is one of our contact forms
+            if (e.target && e.target.matches('form.contact-form')) {
+                e.preventDefault();
+                e.stopImmediatePropagation(); // Critical: Prevents Framer from handling the form
 
-            forms.forEach(form => {
-                form.addEventListener('submit', function (e) {
-                    e.preventDefault();
+                const form = e.target;
+                const submitBtn = form.querySelector('button[type="submit"]');
+                const originalBtnText = submitBtn ? submitBtn.innerText : 'Submit';
 
-                    const submitBtn = form.querySelector('button[type="submit"]');
-                    const originalBtnText = submitBtn ? submitBtn.innerText : 'Submit';
-                    if (submitBtn) submitBtn.innerText = 'Sending...';
+                if (submitBtn) {
+                    submitBtn.innerText = 'Sending...';
+                    submitBtn.disabled = true;
+                }
 
-                    const formData = new FormData(form);
-                    const data = {};
-                    formData.forEach((value, key) => {
-                        data[key] = value;
-                    });
-
-                    // REPLACE THIS WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
-                    const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwIlUV5oEgXOKGihnAQpe_GuAuSYr2iJ_uZNJ0OVIIio4KskgsWODnLncXZT_NCJDDf8g/exec';
-
-                    if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
-                        alert('Please configure the Google Apps Script URL in the code!');
-                        if (submitBtn) submitBtn.innerText = originalBtnText;
-                        return;
-                    }
-
-                    fetch(GOOGLE_SCRIPT_URL, {
-                        method: 'POST',
-                        body: new URLSearchParams(data)
-                    })
-                        .then(response => response.json())
-                        .then(result => {
-                            if (result.result === 'success') {
-                                alert('Thank you! Your message has been sent.');
-                                form.reset();
-                            } else {
-                                alert('Something went wrong. Please try again.');
-                                console.error('Error:', result);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            alert('Something went wrong. Please try again.');
-                        })
-                        .finally(() => {
-                            if (submitBtn) submitBtn.innerText = originalBtnText;
-                        });
+                const formData = new FormData(form);
+                // Convert FormData to a plain object for URLSearchParams if needed, 
+                // but direct FormData is often better if not sending JSON.
+                // However, Google Apps Script often handles URL encoded params easiest.
+                const data = {};
+                formData.forEach((value, key) => {
+                    data[key] = value;
                 });
-            });
-        });
+
+                const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwIlUV5oEgXOKGihnAQpe_GuAuSYr2iJ_uZNJ0OVIIio4KskgsWODnLncXZT_NCJDDf8g/exec';
+
+                fetch(GOOGLE_SCRIPT_URL, {
+                    method: 'POST',
+                    body: new URLSearchParams(data)
+                })
+                    .then(response => response.json())
+                    .then(result => {
+                        if (result.result === 'success') {
+                            alert('Thank you! Your message has been sent.');
+                            form.reset();
+                        } else {
+                            alert('Something went wrong. Please try again.');
+                            console.error('Error result:', result);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Fetch error:', error);
+                        alert('Something went wrong. Please try again.');
+                    })
+                    .finally(() => {
+                        if (submitBtn) {
+                            submitBtn.innerText = originalBtnText;
+                            submitBtn.disabled = false;
+                        }
+                    });
+            }
+        }, true); // 'true' enables the capture phase
     </script>
 </body>
 
